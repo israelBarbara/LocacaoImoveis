@@ -5,10 +5,12 @@ using LocacaoImoveis.Domain.v1.DTOs.Response;
 using LocacaoImoveis.Domain.v1.Extension;
 using LocacaoImoveis.Domain.v1.Models;
 using LocacaoImoveis.Infrastructure.Context;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Swashbuckle.Swagger.Annotations;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -68,9 +70,10 @@ namespace LocacaoImovel.API.v1.Controllers
             return Ok(response);
         }
 
+      
         [HttpPost]
         [SwaggerOperation("Cadastrar Imovel")]
-        public async Task<IActionResult> CadastrarImovel(CadastrarImovelRequest Imovel)
+        public async Task<IActionResult> CadastrarImovel([FromForm] CadastrarImovelRequest Imovel, [FromForm] List<IFormFile> files)
         {
 
             var endereco = new EnderecoByCep();
