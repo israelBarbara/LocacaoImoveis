@@ -80,3 +80,16 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+ALTER TABLE [IMOVEL] ADD [Metros2] int NOT NULL DEFAULT 0;
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20221116172139_Metros2', N'5.0.0');
+GO
+
+COMMIT;
+GO
+

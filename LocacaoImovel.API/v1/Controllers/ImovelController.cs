@@ -57,6 +57,7 @@ namespace LocacaoImovel.API.v1.Controllers
             {
                 tipoImovel = Imovel.tipoImovel,
                 Valor = Imovel.Valor,
+                Metros2 = Imovel.Metros2,
                 VagasGaragem = Imovel.VagasGaragem,
                 DataAnuncio = DateTime.Now,
                 NomProprietario = Imovel.NomProprietario,

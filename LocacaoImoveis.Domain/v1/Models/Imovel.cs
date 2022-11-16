@@ -15,6 +15,7 @@ namespace LocacaoImoveis.Domain.v1.Models
         public int Id { get; set; }
         public TipoImovel tipoImovel { get; set; }    
         public decimal Valor { get; set; }
+        public int Metros2 { get; set; }
         public int VagasGaragem { get; set; }
         public DateTime DataAnuncio { get; set; }
         public string NomProprietario { get; set; }
