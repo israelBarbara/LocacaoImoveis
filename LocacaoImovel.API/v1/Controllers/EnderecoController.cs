@@ -77,7 +77,7 @@ namespace LocacaoImovel.API.v1.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         [SwaggerOperation("deletar endereco")]
         public IActionResult DeletarEndereco(int imovelId)
         {

@@ -37,10 +37,6 @@ namespace LocacaoImovel.API.v1.Controllers
         {
             var imovel = await _context.Imoveis.FindAsync(imovelId);
             if (imovel == null) return NotFound();
-            var enderecoImovel = _context.Enderecos.Where(c => c.ImovelId == imovel.Id).FirstOrDefault();
-
-            var imagens = _context.Imagens.Where(c => c.ImovelId == imovel.Id).ToList();
-
             var response = new ImovelResponse
             {
                 TipoImovel = imovel.tipoImovel.ToString(),
@@ -57,16 +53,6 @@ namespace LocacaoImovel.API.v1.Controllers
         [SwaggerOperation("Cadastrar Imovel")]
         public async Task<IActionResult> CadastrarImovel(CadastrarImovelRequest Imovel)
         {
-
-
-            bool cepValidated = CepValidation.CepValidationExtension(Imovel.Cep);
-
-            if (!cepValidated) return BadRequest("cep nao valido");
-
-            var enderecoResponse = new EnderecoByCepRequest();
-            enderecoResponse = await EnderecoByCep.GetEndereco(Imovel.Cep);
-            if (enderecoResponse.cep == null) return NotFound("cep nao existe");
-
             var _imovel = new Imovel
             {
                 tipoImovel = Imovel.tipoImovel,
@@ -79,14 +65,14 @@ namespace LocacaoImovel.API.v1.Controllers
 
             _context.Add(_imovel);
             await _context.SaveChangesAsync();
-            return Ok();
+            return Ok(_imovel.Id);
         }
 
         [HttpDelete("{id:int}")]
         [SwaggerOperation("Deletar Imovel")]
         public async Task<IActionResult> DeletarImovel(int imovelId)
         {
-            Imovel _imovel = await _context.Imoveis.FindAsync(imovelId);
+            var _imovel = await _context.Imoveis.FindAsync(imovelId);
             if (_imovel != null) _context.Imoveis.Remove(_imovel);
             return Ok();
         }
@@ -95,7 +81,7 @@ namespace LocacaoImovel.API.v1.Controllers
         [SwaggerOperation("Atualizar Imovel")]
         public async Task<IActionResult> AtualizarImovel(AtualizarImovelRequest imovel)
         {
-            Imovel _imovel = await _context.Imoveis.FindAsync(imovel.Id);
+            var _imovel = await _context.Imoveis.FindAsync(imovel.Id);
             if (_imovel == null) return NotFound();
 
             _imovel.Valor = imovel.Valor;
