@@ -14,15 +14,12 @@ namespace LocacaoImoveis.Domain.v1.Extension
     {
         public static async Task<EnderecoByCepRequest> GetEndereco(string cep)
         {
-            var end = new EnderecoResponse();
-            var url = $"http://viacep.com.br/ws/{cep}/json/";
             var httpClient = new HttpClient();
+            var url = $"http://viacep.com.br/ws/{cep}/json/";      
             var response = await httpClient.GetAsync(url);
             var data = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<EnderecoByCepRequest>(data);
             return result;
         }
-
-
     }
 }
