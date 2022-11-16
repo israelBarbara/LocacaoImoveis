@@ -57,7 +57,6 @@ namespace LocacaoImovel.API.v1.Controllers
             if (enderecoExists != null) return BadRequest("Endereco ja existe");
 
             var enderecoByCep = new EnderecoByCepRequest();
-            var cepValidation = new CepValidation();
 
             enderecoByCep = await EnderecoByCep.GetEndereco(endereco.Cep);
             if (enderecoByCep.cep == null) return NotFound("cep nao existe");
@@ -67,7 +66,7 @@ namespace LocacaoImovel.API.v1.Controllers
                 Logradouro = enderecoByCep.logradouro,
                 Numero = endereco.Numero,
                 Complemento = endereco.Complemento,
-                Cep = cepValidation.cepFormatted(enderecoByCep.cep),
+                Cep = CepValidation.cepFormatted(enderecoByCep.cep),
                 Bairro = enderecoByCep.bairro,
                 Cidade = enderecoByCep.localidade,
                 Estado = enderecoByCep.uf,

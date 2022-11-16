@@ -58,10 +58,8 @@ namespace LocacaoImovel.API.v1.Controllers
         public async Task<IActionResult> CadastrarImovel(CadastrarImovelRequest Imovel)
         {
 
-            var endereco = new EnderecoByCep();
-            var cepValidation = new CepValidation();
 
-            bool cepValidated = cepValidation.CepValidationExtension(Imovel.Cep);
+            bool cepValidated = CepValidation.CepValidationExtension(Imovel.Cep);
 
             if (!cepValidated) return BadRequest("cep nao valido");
 

@@ -9,7 +9,7 @@ namespace LocacaoImoveis.Domain.v1.Extension
     public class CepValidation
     {
 
-        public bool CepValidationExtension(string cep)
+        public static bool CepValidationExtension(string cep)
         {
             string _cep = cep.Replace("-", "").Replace(" ", "");
             if(_cep.Length != 8) return false;  
@@ -26,7 +26,7 @@ namespace LocacaoImoveis.Domain.v1.Extension
             return true;    
         }
 
-        public string cepFormatted(string cep)
+        public static string cepFormatted(string cep)
         {
             return cep.Replace("-", "").Replace(" ", "");
         }
