@@ -27,12 +27,12 @@ namespace LocacaoImovel.API.v1.Controllers
             _context = context;
         }
 
-
         [HttpGet("{id:int}")]
         [SwaggerOperation("listar Imagens")]
         public IActionResult ListarImagens(int imovelId)
         {
             var imagemResponse = new ImagemResponse();
+            imagemResponse.base64Images = new List<string>();
             var imagens = _context.Imagens.Where(c => c.ImovelId == imovelId).ToList();
             if (imagens.Count() == 0) return NotFound("nao ha imagens");
 
@@ -42,24 +42,35 @@ namespace LocacaoImovel.API.v1.Controllers
                 string base64ImageRepresentation = Convert.ToBase64String(imageArray);
                 imagemResponse.base64Images.Add(base64ImageRepresentation);
             }
-
             return Ok(imagemResponse);
         }
 
         [HttpPost("{id:int}")]
         [SwaggerOperation("cadastrar Imagens")]
-        public IActionResult CadastrarImagens(CadastrarImagemRequest imagem)
+        public async Task<IActionResult> CadastrarImagens([FromForm] CadastrarImagemRequest imagem)
         {
+                  
+            var imagens = _context.Imagens.Where(c => c.ImovelId == imagem.ImovelId).ToList();
+            if (imagens.Count() >= 10) return BadRequest("Maximo de 10 imagens");
 
             foreach (var item in imagem.files)
             {
-                var _imagem = new Imagem              
-                { 
-                    ImovelId = imagem.ImovelId,
-                    CaminhoImagem = item.FileName,
-                    DataCadastro = DateTime.Now,                           
-                };
+                if(item.FileName.Length > 80) return BadRequest("tamanho imagem muito grande");
             }
+
+            foreach (var item in imagem.files)
+            {
+                string img = ImageUpload.SaveImg(item);
+                if (img.Length == 0) return BadRequest("imagem invalida");
+                var _imagem = new Imagem
+                {
+                    ImovelId = imagem.ImovelId,
+                    CaminhoImagem = img,
+                    DataCadastro = DateTime.Now,
+                };
+                _context.Imagens.Add(_imagem);
+            }
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -71,9 +82,13 @@ namespace LocacaoImovel.API.v1.Controllers
             var imagens = _context.Imagens.Where(c => c.ImovelId == imovelId).ToList();
             if (imagens.Count() == 0) return NotFound("nao ha imagens");
 
+            foreach (var item in imagens)
+            {
+                ImageUpload.DeleteImg(item.CaminhoImagem);
+            }
+
             _context.Imagens.RemoveRange(imagens);
             await _context.SaveChangesAsync();
-
             return Ok();
         }
 

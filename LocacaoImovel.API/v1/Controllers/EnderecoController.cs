@@ -9,8 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Swashbuckle.Swagger.Annotations;
-using System;
-using System.Collections.Generic;
+
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,6 +52,10 @@ namespace LocacaoImovel.API.v1.Controllers
 
         public async Task<IActionResult> CadastrarEndereco(CadastrarEndereco endereco)
         {
+
+            var enderecoExists = _context.Enderecos.Where(x => x.ImovelId == endereco.ImovelId).FirstOrDefault();
+            if (enderecoExists != null) return BadRequest("Endereco ja existe");
+
             var enderecoByCep = new EnderecoByCepRequest();
             var cepValidation = new CepValidation();
 

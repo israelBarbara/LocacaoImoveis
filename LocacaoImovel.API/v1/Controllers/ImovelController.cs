@@ -41,7 +41,6 @@ namespace LocacaoImovel.API.v1.Controllers
 
             var imagens = _context.Imagens.Where(c => c.ImovelId == imovel.Id).ToList();
 
-
             var response = new ImovelResponse
             {
                 TipoImovel = imovel.tipoImovel.ToString(),
@@ -50,15 +49,13 @@ namespace LocacaoImovel.API.v1.Controllers
                 NomProprietario = imovel.NomProprietario,
                 Descricao = imovel.Descricao,
             };
-
-
             return Ok(response);
         }
 
-      
+
         [HttpPost]
         [SwaggerOperation("Cadastrar Imovel")]
-        public async Task<IActionResult> CadastrarImovel([FromForm] CadastrarImovelRequest Imovel, [FromForm] List<IFormFile> files)
+        public async Task<IActionResult> CadastrarImovel(CadastrarImovelRequest Imovel)
         {
 
             var endereco = new EnderecoByCep();
@@ -67,7 +64,6 @@ namespace LocacaoImovel.API.v1.Controllers
             bool cepValidated = cepValidation.CepValidationExtension(Imovel.Cep);
 
             if (!cepValidated) return BadRequest("cep nao valido");
-
 
             var enderecoResponse = new EnderecoByCepRequest();
             enderecoResponse = await EnderecoByCep.GetEndereco(Imovel.Cep);
@@ -85,29 +81,24 @@ namespace LocacaoImovel.API.v1.Controllers
 
             _context.Add(_imovel);
             await _context.SaveChangesAsync();
-
             return Ok();
-
         }
 
         [HttpDelete("{id:int}")]
         [SwaggerOperation("Deletar Imovel")]
         public async Task<IActionResult> DeletarImovel(int imovelId)
         {
-            var _imovel = await _context.Imoveis.FindAsync(imovelId);
-           
-            var enderecoImovel = _context.Enderecos.Where(c => c.ImovelId == imovelId).FirstOrDefault();
-            if(enderecoImovel != null) _context.Enderecos.Remove(enderecoImovel);
-
+            Imovel _imovel = await _context.Imoveis.FindAsync(imovelId);
+            if (_imovel != null) _context.Imoveis.Remove(_imovel);
             return Ok();
         }
 
         [HttpPut("{id:int}")]
         [SwaggerOperation("Atualizar Imovel")]
-        public async Task<IActionResult> AtualizartImovel(AtualizarImovelRequest imovel)
+        public async Task<IActionResult> AtualizarImovel(AtualizarImovelRequest imovel)
         {
-            var _imovel = await _context.Imoveis.FindAsync(imovel.Id);
-            if(_imovel == null) return NotFound();
+            Imovel _imovel = await _context.Imoveis.FindAsync(imovel.Id);
+            if (_imovel == null) return NotFound();
 
             _imovel.Valor = imovel.Valor;
             _imovel.Descricao = imovel.Descricao;

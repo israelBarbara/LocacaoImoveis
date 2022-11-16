@@ -12,7 +12,7 @@ namespace LocacaoImoveis.Infrastructure.Mappings
 
             builder.Property(c => c.CaminhoImagem)
                     .IsRequired()
-                    .HasColumnType("varchar(100)");
+                    .HasColumnType("varchar(300)");
             builder.ToTable("IMAGEM");
         }
 
