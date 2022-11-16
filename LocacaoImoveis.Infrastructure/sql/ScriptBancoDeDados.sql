@@ -40,7 +40,7 @@ GO
 
 CREATE TABLE [IMAGEM] (
     [Id] int NOT NULL IDENTITY,
-    [CaminhoImagem] varchar(100) NOT NULL,
+    [CaminhoImagem] varchar(300) NOT NULL,
     [ImovelId] int NOT NULL,
     [DataCadastro] datetime2 NOT NULL,
     CONSTRAINT [PK_IMAGEM] PRIMARY KEY ([Id]),
@@ -56,6 +56,25 @@ GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20221115171513_Initial', N'5.0.0');
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+DECLARE @var0 sysname;
+SELECT @var0 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[IMAGEM]') AND [c].[name] = N'CaminhoImagem');
+IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [IMAGEM] DROP CONSTRAINT [' + @var0 + '];');
+ALTER TABLE [IMAGEM] ALTER COLUMN [CaminhoImagem] varchar(300) NOT NULL;
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20221116140306_imageSize', N'5.0.0');
 GO
 
 COMMIT;
