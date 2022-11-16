@@ -75,6 +75,8 @@ namespace LocacaoImovel.API.v1.Controllers
             return Ok();
         }
 
+        [HttpDelete]
+        [SwaggerOperation("deletar endereco")]
         public IActionResult DeletarEndereco(int imovelId)
         {
             var endereco = _context.Enderecos.Where(c => c.ImovelId == imovelId).FirstOrDefault();
